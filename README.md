@@ -4,7 +4,7 @@
 ---
 
 ## Purpose
-Topograhic prominence of settlement or mortuary sites provides insight into locational preferences among past communities. Sites placed in strategically elevated and defensible positions reflect a different mindset towards the neighbours and the world than accessible and low lying meeting places, and can tell us about modes of socialisation, and notions of identity, territory, competition, and social organisation for starts. This repository provides some fuctions that allow us to computationally extract data on locational preferences from digital elevation models for sites represented by point shapefiles. This analysis represents a small piece of a potentially scalable project applicable to the Mediterranean landscapes
+Topographic prominence of settlement or mortuary sites provides insight into locational preferences among past communities. Sites placed in strategically elevated and defensible positions reflect a different mindset towards the neighbours and the world than sites founded in accessible and low lying meeting places. These differences can tell us about different modes of community socialisation and functioning in space, as well as different notions of identity, territory, competition, and social organisation. When assessed over time, we can glean changes in socio-political relations and philosophical-religious notions. This repository provides some fuctions that allow us to computationally extract data on locational preferences from digital elevation models for sites represented by point shapefiles. This analysis represents a small piece of a potentially scalable project applicable to the Mediterranean landscapes
 
 ---
 ## Authors
