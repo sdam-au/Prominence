@@ -4,8 +4,10 @@
 
 #####################################################################
 
-# serves to calculate prominence in unprojected rasters that lack the translation of pixels into distance units
-# this function is suitable for arbitrary rasters, and requires the user to specify moving window size only.
+# serves to calculate prominence in unprojected rasters that
+# lack the translation of pixels into distance units
+# this function is suitable for arbitrary rasters, 
+# and requires the user to specify moving window size only.
 
 
 prom_pixels <- function(input, output, cells) {  #length of neighborhood is defined in pixel cells
@@ -27,7 +29,8 @@ prom_pixels <- function(input, output, cells) {  #length of neighborhood is defi
   # check input raster has even sides 
   if(res(input)[1]*dim(input)[1]!=res(input)[2]*dim(input)[2]) {print("Raster has uneven sides")
   } else { 
-    print(paste(res(input)[1]*dim(input)[1],"(m) is the length of both raster sides, all is copacetic"))
+    print(paste(res(input)[1]*dim(input)[1],
+                "(m)is the length of both raster sides, all is copacetic"))
     
     # define size of neighborhood
     if ((cells %% 2) == 0) {
@@ -42,20 +45,27 @@ prom_pixels <- function(input, output, cells) {  #length of neighborhood is defi
         print("Not yet done, installing rgdal to create output")
         install.packages("rgdal")
         library(rgdal)
-        pint("writing resulting raster to file")
+        print("writing resulting raster to file")
         writeRaster(r_prom, filename=file.path("outputs/", output), format = "GTiff",  datatype= "INT2S", 
                     overwrite = TRUE, NAflag = 9999) 
       } # raster is only viewable back in R, or with a stretch in ArcMAP 
       print("Working on the plot now")
       par(mfrow=c(2,2))
       plot(input, main = "This is the original raster \n Ruined Castle 2 m DEM")
-      plot(r_prom, main = "Prominence within specified window \n of any spot within the DEM") # HOW CAN I PRINT THE INPUT RADIUS?
-      hist(input)
-      hist(r_prom)
+      plot(r_prom, main = paste0("Prominence within ",res(input)[1]*dim(input)[1] ,"m window \n of any spot within the DEM")) # HOW CAN I PRINT THE INPUT RADIUS? use paste()
+      hist(input, xlab= "Elevation in meters" ,
+           main = "Elevation distribution in the DEM")
+      hist(r_prom, xlab = "%",
+          main = paste0("Prominence within the window of  \n ",cells, " cell or ",res(input)[1]*dim(input)[1] ,"m"))
       print("All done")
     }
   } 
 }
+
+hist(Kat, xlab = "%")
+?hist()
+
+
 
 # EXAMPLE OF THE FUNCTION AT WORK
 
@@ -71,10 +81,10 @@ libraries("raster", "FSA") #easypackages
 
 # read in text DEM from Blue Mountains (2m res, 1000 cells a side)
 Kat <- raster("./data/Katoomba201804-LID2-AHD_2486260_56_0002_0002_2m.asc")
-
+Kat
 # run the function, remember to specify output file name
 prom_pixels(Kat, "Kattest.tif", 11)
-prom_pixels(raster(x), "test.tif", 3)
+# prom_pixels(raster(x), "test.tif", 3) # run this line if you played with creaing a  raster
 prom_pixels(input, "RC_50mProm.tif", 101)
 
 

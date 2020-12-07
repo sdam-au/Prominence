@@ -1,5 +1,6 @@
 # Sampling rasters at coordinates
 
+
 # Libraries
 library(raster)
 library(rgdal)
