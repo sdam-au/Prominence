@@ -7,31 +7,6 @@ library(mapview)
 library(tidyverse)
 library(sf)
 
-# get raster data
-yam <- getData('SRTM', lon = 9, lat= 56)
-plot(bg1)
-bg2 <- getData('SRTM', lon = 11, lat= 56)
-plot(bg2)
-bg3 <- getData('SRTM', lon = 9, lat= 51)
-plot(bg3)
-bg4 <- getData('SRTM', lon = 11, lat= 51)
-plot(bg4)
-
-
-bg <- mosaic(bg1, bg2, bg3, bg4, fun = mean)
-
-
-mapview(bg)
-
-
-plot(bg)
-e <- drawExtent(show = TRUE, col = "red")
-bg_crop <- crop(bg, e)
-bg_crop <- projectRaster(bg_crop, crs = 32632)
-
-
-mapview(bg_crop) + mapview(bg_borders)
-
 
 # get elevation data
 bg_el <- getData("alt", country = "BG", mask = TRUE)
@@ -71,3 +46,7 @@ plot(bg_prompix21)
 mounds <- st_read("landscape_prominence/data/mounds.shp")
 mounds$prom21pix <- raster::extract(bg_prompix21, st_transform(mounds, 4326))
 hist(yam_prompix21); hist(mounds$prom21pix, add =TRUE)
+
+st_write(mounds, "landscape_prominence/output/moundsprom.shp")
+writeRaster(yam_prompix21, "landscape_prominence/output/Yamprom21pix.tif", format = "GTiff")
+writeRaster(bg_prompix21,"landscape_prominence/output/BGprom21pix.tif", format = "GTiff")
