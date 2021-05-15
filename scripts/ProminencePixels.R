@@ -24,7 +24,8 @@ prom_pixels <- function(input, output, cells) {  #length of neighborhood is defi
   
   # define the function to be run in the neighborhood
   f.prom <- function(x) perc(x,x[length(x)/2],"lt")    # percentage of cells lower than the central one 
-  #lt, gt, leg, get are the arguments for lower, greater, lower or equal, and greater or equal 
+  f.noprom <- function(x) perc(x,x[length(x)/2],"gt") 
+  #lt, gt, leq, geq are the arguments for lower, greater, lower or equal, and greater or equal 
   
   # check input raster has even sides 
   if(res(input)[1]*dim(input)[1]!=res(input)[2]*dim(input)[2]) {print("Raster has uneven sides")
@@ -37,18 +38,10 @@ prom_pixels <- function(input, output, cells) {  #length of neighborhood is defi
       print(paste(cells,"is an even number. Neighborhood size must be uneven to calculate. Revise your input (add 1 to your cells input)"))   # toggle radius in light of image res
     } else {
       r_prom <- raster(as.matrix(as.integer(focal(input, matrix(1,cells,cells), f.prom, pad = T, padValue = 0))))
+      # r_prom is a recalculated raster, product of a focal function
       # focal function calculates moving window values for the neighborhood of focal cells 
       # using a matrix of weights, in combination with f.prom - prominence function, which 
       # calculates the percentage of cells higher/lower than the focal value
-      print("Writing raster now")
-      if(!require(rgdal)){
-        print("Not yet done, installing rgdal to create output")
-        install.packages("rgdal")
-        library(rgdal)
-        print("writing resulting raster to file")
-        writeRaster(r_prom, filename=file.path("outputs/", output), format = "GTiff",  datatype= "INT2S", 
-                    overwrite = TRUE, NAflag = 9999) 
-      } # raster is only viewable back in R, or with a stretch in ArcMAP 
       print("Working on the plot now")
       par(mfrow=c(2,2))
       plot(input, main = "This is the original raster \n Ruined Castle 2 m DEM")
@@ -57,6 +50,15 @@ prom_pixels <- function(input, output, cells) {  #length of neighborhood is defi
            main = "Elevation distribution in the DEM")
       hist(r_prom, xlab = "%",
           main = paste0("Prominence within the window of  \n ",cells, " cell or ",res(input)[1]*dim(input)[1] ,"m"))
+      # Trying to print the raster, but it is not working yet.
+      if(!require(rgdal)){
+        print("Not yet done, installing rgdal to create output")
+        install.packages("rgdal")
+        library(rgdal)
+        print("writing resulting raster to file")
+        writeRaster(r_prom, filename = output, format = "GTiff",  datatype= "INT2S", 
+                    overwrite = TRUE, NAflag = 9999) 
+      } # raster is only viewable back in R, or with a stretch in ArcMAP 
       print("All done")
     }
   } 
@@ -86,6 +88,17 @@ Kat
 prom_pixels(Kat, "Kattest.tif", 11)
 # prom_pixels(raster(x), "test.tif", 3) # run this line if you played with creaing a  raster
 prom_pixels(input, "RC_50mProm.tif", 101)
+
+### Print the raster
+
+if(!require(rgdal)){
+  print("Not yet done, installing rgdal to create output")
+  install.packages("rgdal")
+  library(rgdal)
+  print("writing resulting raster to file")
+  writeRaster(r_prom, filename=paste0("outputs/", output), format = "GTiff",  datatype= "INT2S", 
+              overwrite = TRUE, NAflag = 9999) 
+} # raster is only viewable back in R, or with a stretch in ArcMAP 
 
 
 ### NEXT TASK : PARALELLIZE
